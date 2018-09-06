@@ -38,8 +38,8 @@
     <dependency org="com.adaptris" name="adp-core-apt" rev="${adp-core-version}" conf="compile->default;ant->default" changing="true"/>
 
     <dependency org="org.apache.commons" name="commons-compress" rev="1.15" conf="compile->default" />
-
     <dependency org="com.thoughtworks.xstream" name="xstream" rev="1.4.7"/>
+    <dependency org="com.squareup.okhttp3" name="okhttp" rev="3.11.0" conf="compile->default"/>
 
 	<!-- Test dependencies -->
     <dependency org="junit" name="junit" rev="4.8.2" conf="test->default"/>
