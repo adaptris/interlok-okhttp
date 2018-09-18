@@ -23,8 +23,8 @@ import com.adaptris.core.http.client.net.HttpProducer;
 import com.adaptris.core.util.Args;
 import com.adaptris.interlok.config.DataInputParameter;
 import com.adaptris.interlok.config.DataOutputParameter;
-import com.adaptris.okhttp.headers.OKHTTPDiscardResponseHeaders;
-import com.adaptris.okhttp.headers.OKHTTPNoRequestHeaders;
+import com.adaptris.okhttp.headers.request.None;
+import com.adaptris.okhttp.headers.response.Discard;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import okhttp3.MediaType;
@@ -67,17 +67,17 @@ public class OKHTTPProducer extends HttpProducer<Request.Builder, Response>
 	@AdvancedConfig
 	private DataOutputParameter<String> responseBody;
 
-//	@Valid
-//	@AdvancedConfig
-//	@NotNull
-//	@AutoPopulated
-//	private HttpAuthenticator authenticator = new NoAuthentication();
+// @Valid
+// @AdvancedConfig
+// @NotNull
+// @AutoPopulated
+// private HttpAuthenticator authenticator = new NoAuthentication();
 
 	public OKHTTPProducer()
 	{
 		super();
-		setRequestHeaderProvider(new OKHTTPNoRequestHeaders());
-		setResponseHeaderHandler(new OKHTTPDiscardResponseHeaders());
+		setRequestHeaderProvider(new None());
+		setResponseHeaderHandler(new Discard());
 	}
 
 	public OKHTTPProducer(final ProduceDestination destination)
@@ -96,7 +96,7 @@ public class OKHTTPProducer extends HttpProducer<Request.Builder, Response>
 	 * {@inheritDoc}.
 	 */
 	@Override
-	@SuppressWarnings("hiding") 
+	@SuppressWarnings("hiding")
 	protected AdaptrisMessage doRequest(final AdaptrisMessage msg, final ProduceDestination dest, final long timeout) throws ProduceException
 	{
 		logger.info("OKHTTP producer request");
@@ -104,44 +104,13 @@ public class OKHTTPProducer extends HttpProducer<Request.Builder, Response>
 		{
 			final URL url = new URL(dest.getDestination(msg));
 
-			logger.debug("URL = " + url);
-			final RequestBody requestBody = RequestBody.create(MediaType.parse(getContentTypeProvider().getContentType(msg)), this.requestBody.extract(msg));
-
 			final Request.Builder rb = new Request.Builder().url(url);
-
 			getRequestHeaderProvider().addHeaders(msg, rb);
 
+			final RequestBody requestBody = RequestBody.create(MediaType.parse(getContentTypeProvider().getContentType(msg)), this.requestBody.extract(msg));
 			final RequestMethod method = getMethod(msg);
-			switch (method)
-			{
-				case DELETE:
-					logger.trace("HTTP DELETE");
-					rb.delete(requestBody);
-					break;
-				case GET:
-					logger.trace("HTTP GET");
-					rb.get();
-					break;
-				case HEAD:
-					logger.trace("HTTP HEAD");
-					rb.head();
-					break;
-				case PATCH:
-					logger.trace("HTTP PATCH");
-					rb.patch(requestBody);
-					break;
-				case PUT:
-					logger.trace("HTTP PUT");
-					rb.put(requestBody);
-					break;
-				case POST:
-					logger.trace("HTTP POST");
-					rb.post(requestBody);
-					break;
-				default: /* CONNECT, OPTIONS, TRACE */
-					logger.warn("HTTP " + method + " (unsupported)");
-					throw new UnsupportedOperationException("HTTP request method " + method + " is not yet supported!");
-			}
+			logger.info("HTTP " + method.name() + " " + url);
+			rb.method(method.name(), requestBody);
 
 			final Request request = rb.build();
 			try (final Response response = client.newCall(request).execute())
@@ -206,26 +175,26 @@ public class OKHTTPProducer extends HttpProducer<Request.Builder, Response>
 		responseBody = Args.notNull(output, "data output");
 	}
 
-//	/**
-//	 * Get the HTTP authentication method.
-//	 * 
-//	 * @return The HTTP authentication method.
-//	 */
-//	public HttpAuthenticator getAuthenticator()
-//	{
-//		return authenticator;
-//	}
+// /**
+// * Get the HTTP authentication method.
+// *
+// * @return The HTTP authentication method.
+// */
+// public HttpAuthenticator getAuthenticator()
+// {
+// return authenticator;
+// }
 //
-//	/**
-//	 * Set the authentication method to use for the HTTP request
-//	 * 
-//	 * @param auth
-//	 *            The method of HTTP authentication to use.
-//	 */
-//	public void setAuthenticator(final HttpAuthenticator auth)
-//	{
-//		authenticator = auth;
-//	}
+// /**
+// * Set the authentication method to use for the HTTP request
+// *
+// * @param auth
+// * The method of HTTP authentication to use.
+// */
+// public void setAuthenticator(final HttpAuthenticator auth)
+// {
+// authenticator = auth;
+// }
 
 	/**
 	 * {@inheritDoc}.
