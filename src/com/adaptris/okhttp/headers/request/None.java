@@ -1,4 +1,4 @@
-package com.adaptris.okhttp.headers;
+package com.adaptris.okhttp.headers.request;
 
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.http.client.RequestHeaderProvider;
@@ -10,10 +10,10 @@ import okhttp3.Request;
  * Implementation of {@link RequestHeaderProvider} that adds no additional headers
  */
 @XStreamAlias("okhttp-no-request-headers")
-public class OKHTTPNoRequestHeaders implements RequestHeaderProvider<Request.Builder>
+public class None implements RequestHeaderProvider<Request.Builder>
 {
 	@Override
-	public Request.Builder addHeaders(AdaptrisMessage msg, Request.Builder target)
+	public Request.Builder addHeaders(final AdaptrisMessage msg, final Request.Builder target)
 	{
 		return target;
 	}

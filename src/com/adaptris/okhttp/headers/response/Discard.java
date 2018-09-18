@@ -1,4 +1,4 @@
-package com.adaptris.okhttp.headers;
+package com.adaptris.okhttp.headers.response;
 
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.http.client.ResponseHeaderHandler;
@@ -10,10 +10,10 @@ import okhttp3.Response;
  * {@link ResponseHeaderHandler} implementation that discards the headers from the HTTP response.
  */
 @XStreamAlias("okhttp-discard-response-headers")
-public class OKHTTPDiscardResponseHeaders implements ResponseHeaderHandler<Response>
+public class Discard implements ResponseHeaderHandler<Response>
 {
 	@Override
-	public AdaptrisMessage handle(Response response, AdaptrisMessage msg)
+	public AdaptrisMessage handle(final Response response, final AdaptrisMessage msg)
 	{
 		return msg;
 	}

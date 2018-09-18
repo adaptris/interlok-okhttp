@@ -1,4 +1,4 @@
-package com.adaptris.okhttp.headers;
+package com.adaptris.okhttp.headers.request;
 
 import javax.validation.constraints.NotNull;
 
@@ -15,20 +15,19 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import okhttp3.Request;
 
-
 /**
  * Implementation of {@link RequestHeaderProvider} that applies configured values as headers.
  */
 @XStreamAlias("okhttp-configured-request-headers")
-public class OKHTTPConfiguredRequestHeaders implements RequestHeaderProvider<Request.Builder>
+public class Configured implements RequestHeaderProvider<Request.Builder>
 {
-	private static final transient Logger log = LoggerFactory.getLogger(OKHTTPConfiguredRequestHeaders.class);
+	private static final transient Logger log = LoggerFactory.getLogger(Configured.class);
 
 	@NotNull
 	@AutoPopulated
 	private KeyValuePairSet headers;
 
-	public OKHTTPConfiguredRequestHeaders()
+	public Configured()
 	{
 		headers = new KeyValuePairSet();
 	}
@@ -54,7 +53,7 @@ public class OKHTTPConfiguredRequestHeaders implements RequestHeaderProvider<Req
 		this.headers = Args.notNull(headers, "headers");
 	}
 
-	public OKHTTPConfiguredRequestHeaders withHeaders(final KeyValuePair... keyValuePairs)
+	public Configured withHeaders(final KeyValuePair... keyValuePairs)
 	{
 		for (final KeyValuePair pair : keyValuePairs)
 		{
