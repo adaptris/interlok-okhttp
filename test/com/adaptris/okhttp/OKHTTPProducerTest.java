@@ -1,38 +1,41 @@
 package com.adaptris.okhttp;
 
-import com.adaptris.core.ConfiguredProduceDestination;
-import com.adaptris.core.StandaloneProducer;
-import com.adaptris.core.http.HttpProducerExample;
-import com.adaptris.core.metadata.RegexMetadataFilter;
-import com.adaptris.okhttp.headers.request.CompositeRequestHeaders;
-import com.adaptris.okhttp.headers.request.ConfiguredRequestHeaders;
-import com.adaptris.okhttp.headers.request.MetadataRequestHeaders;
-import com.adaptris.okhttp.headers.response.CompositeResponseHeaders;
-import com.adaptris.okhttp.headers.response.MetadataResponseHeaders;
-import com.adaptris.util.KeyValuePair;
+import org.junit.Test;
 
-public class OKHTTPProducerTest extends HttpProducerExample
+import com.adaptris.core.AdaptrisMessage;
+import com.adaptris.core.ConfiguredProduceDestination;
+import com.adaptris.core.DefaultMessageFactory;
+import com.adaptris.core.ProduceDestination;
+import com.adaptris.core.common.StringPayloadDataInputParameter;
+import com.adaptris.core.http.client.ConfiguredRequestMethodProvider;
+import com.adaptris.core.http.client.RequestMethodProvider;
+
+public class OKHTTPProducerTest
 {
-	public OKHTTPProducerTest(String name)
+
+	@Test
+	public void testRequestGet() throws Exception
 	{
-		super(name);
+		final ProduceDestination destination = new ConfiguredProduceDestination("https://www.example.com/");
+		final AdaptrisMessage message = new DefaultMessageFactory().newMessage();
+		final OKHTTPProducer producer = new OKHTTPProducer(destination);
+
+		producer.setMethodProvider(new ConfiguredRequestMethodProvider(RequestMethodProvider.RequestMethod.GET));
+		producer.setRequestBody(new StringPayloadDataInputParameter());
+
+		producer.produce(message, destination);
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	protected Object retrieveObjectForSampleConfig()
+	@Test
+	public void testRequestPost() throws Exception
 	{
-		OKHTTPProducer producer = new OKHTTPProducer(new ConfiguredProduceDestination("http://myhost.com/url/to/post/to"));
+		final ProduceDestination destination = new ConfiguredProduceDestination("https://www.example.com/");
+		final AdaptrisMessage message = new DefaultMessageFactory().newMessage();
+		final OKHTTPProducer producer = new OKHTTPProducer(destination);
 
-		CompositeRequestHeaders headers = new CompositeRequestHeaders(
-				new MetadataRequestHeaders(new RegexMetadataFilter().withIncludePatterns("X-HTTP.*").withExcludePatterns("X-NotHttp.*")),
-				new ConfiguredRequestHeaders().withHeaders(new KeyValuePair("SOAPAction", "urn:hello")));
-		producer.setRequestHeaderProvider(headers);
+		producer.setMethodProvider(new ConfiguredRequestMethodProvider(RequestMethodProvider.RequestMethod.POST));
+		producer.setRequestBody(new StringPayloadDataInputParameter());
 
-		producer.setResponseHeaderHandler(new CompositeResponseHeaders(new MetadataResponseHeaders("resp_hdr_")));
-
-		//producer.setAuthenticator(getAuthenticator("username", "password"));
-
-		return new StandaloneProducer(producer);
+		producer.produce(message, destination);
 	}
 }
