@@ -19,3 +19,5 @@ testoutput/
 config/sharedmem.properties
 ivy.jar
 unit-tests.properties
+.gradle
+gradle.properties
