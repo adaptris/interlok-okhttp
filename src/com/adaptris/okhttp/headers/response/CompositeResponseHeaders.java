@@ -25,19 +25,19 @@ import okhttp3.Response;
  * @config http-composite-request-headers
  */
 @XStreamAlias("okhttp-composite-response-header-handler")
-public class Composite implements ResponseHeaderHandler<Response>
+public class CompositeResponseHeaders implements ResponseHeaderHandler<Response>
 {
 	@XStreamImplicit
 	@NotNull
 	@AutoPopulated
 	private List<ResponseHeaderHandler<Response>> handlers;
 
-	public Composite()
+	public CompositeResponseHeaders()
 	{
 		setHandlers(new ArrayList<>());
 	}
 
-	public Composite(@SuppressWarnings("unchecked") ResponseHeaderHandler<Response>... handlers)
+	public CompositeResponseHeaders(@SuppressWarnings("unchecked") ResponseHeaderHandler<Response>... handlers)
 	{
 		this();
 		for (final ResponseHeaderHandler<Response> h : handlers)

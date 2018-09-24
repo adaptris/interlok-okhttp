@@ -25,9 +25,9 @@ import okhttp3.Request;
  * @config okhttp-metadata-request-headers
  */
 @XStreamAlias("okhttp-metadata-request-headers")
-public class Metadata implements RequestHeaderProvider<Request.Builder>
+public class MetadataRequestHeaders implements RequestHeaderProvider<Request.Builder>
 {
-	private static final transient Logger log = LoggerFactory.getLogger(Metadata.class);
+	private static final transient Logger log = LoggerFactory.getLogger(MetadataRequestHeaders.class);
 
 	@NotNull
 	@Valid
@@ -37,12 +37,12 @@ public class Metadata implements RequestHeaderProvider<Request.Builder>
 	@InputFieldDefault(value = "false")
 	private Boolean unfold;
 
-	public Metadata()
+	public MetadataRequestHeaders()
 	{
 		super();
 	}
 
-	public Metadata(final MetadataFilter mf)
+	public MetadataRequestHeaders(final MetadataFilter mf)
 	{
 		this();
 		setFilter(mf);

@@ -20,10 +20,10 @@ import okhttp3.Response;
  * @config okhttp-response-headers-as-metadata
  */
 @XStreamAlias("okhttp-response-headers-as-metadata")
-public class Metadata implements ResponseHeaderHandler<Response>
+public class MetadataResponseHeaders implements ResponseHeaderHandler<Response>
 {
 
-	private static final transient Logger log = LoggerFactory.getLogger(Metadata.class);
+	private static final transient Logger log = LoggerFactory.getLogger(MetadataResponseHeaders.class);
 
 	private static final String DEFAULT_SEPARATOR_CHAR = "\t";
 
@@ -32,18 +32,18 @@ public class Metadata implements ResponseHeaderHandler<Response>
 	@AdvancedConfig
 	private String metadataSeparator = DEFAULT_SEPARATOR_CHAR;
 
-	public Metadata()
+	public MetadataResponseHeaders()
 	{
 	}
 
-	public Metadata(final String prefix, final String separator)
+	public MetadataResponseHeaders(final String prefix, final String separator)
 	{
 		this();
 		setMetadataPrefix(prefix);
 		setMetadataSeparator(separator);
 	}
 
-	public Metadata(final String prefix)
+	public MetadataResponseHeaders(final String prefix)
 	{
 		this(prefix, DEFAULT_SEPARATOR_CHAR);
 	}

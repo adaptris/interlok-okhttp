@@ -19,15 +19,15 @@ import okhttp3.Request;
  * Implementation of {@link RequestHeaderProvider} that applies configured values as headers.
  */
 @XStreamAlias("okhttp-configured-request-headers")
-public class Configured implements RequestHeaderProvider<Request.Builder>
+public class ConfiguredRequestHeaders implements RequestHeaderProvider<Request.Builder>
 {
-	private static final transient Logger log = LoggerFactory.getLogger(Configured.class);
+	private static final transient Logger log = LoggerFactory.getLogger(ConfiguredRequestHeaders.class);
 
 	@NotNull
 	@AutoPopulated
 	private KeyValuePairSet headers;
 
-	public Configured()
+	public ConfiguredRequestHeaders()
 	{
 		headers = new KeyValuePairSet();
 	}
@@ -53,7 +53,7 @@ public class Configured implements RequestHeaderProvider<Request.Builder>
 		this.headers = Args.notNull(headers, "headers");
 	}
 
-	public Configured withHeaders(final KeyValuePair... keyValuePairs)
+	public ConfiguredRequestHeaders withHeaders(final KeyValuePair... keyValuePairs)
 	{
 		for (final KeyValuePair pair : keyValuePairs)
 		{

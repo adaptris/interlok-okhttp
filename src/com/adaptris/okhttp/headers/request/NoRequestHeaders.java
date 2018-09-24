@@ -10,7 +10,7 @@ import okhttp3.Request;
  * Implementation of {@link RequestHeaderProvider} that adds no additional headers
  */
 @XStreamAlias("okhttp-no-request-headers")
-public class None implements RequestHeaderProvider<Request.Builder>
+public class NoRequestHeaders implements RequestHeaderProvider<Request.Builder>
 {
 	@Override
 	public Request.Builder addHeaders(final AdaptrisMessage msg, final Request.Builder target)

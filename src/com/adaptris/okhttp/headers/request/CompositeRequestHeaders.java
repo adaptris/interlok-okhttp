@@ -24,19 +24,19 @@ import okhttp3.Request;
  * @config okhttp-composite-request-headers
  */
 @XStreamAlias("okhttp-composite-request-headers")
-public class Composite implements RequestHeaderProvider<Request.Builder>
+public class CompositeRequestHeaders implements RequestHeaderProvider<Request.Builder>
 {
 	@XStreamImplicit
 	@NotNull
 	@AutoPopulated
 	private List<RequestHeaderProvider<Request.Builder>> providers;
 
-	public Composite()
+	public CompositeRequestHeaders()
 	{
 		providers = new ArrayList<>();
 	}
 
-	public Composite(@SuppressWarnings("unchecked") final RequestHeaderProvider<Request.Builder>... headers)
+	public CompositeRequestHeaders(@SuppressWarnings("unchecked") final RequestHeaderProvider<Request.Builder>... headers)
 	{
 		this();
 		setProviders(new ArrayList<>(Arrays.asList(headers)));
