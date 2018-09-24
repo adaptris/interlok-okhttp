@@ -115,7 +115,14 @@ public class OKHTTPProducer extends HttpProducer<Request.Builder, Response>
 
 			final RequestMethod method = getMethod(msg);
 			logger.info("HTTP " + method.name() + " " + url);
-			rb.method(method.name(), requestBody);
+			if (method == RequestMethod.GET)
+			{
+				rb.get();
+			}
+			else
+			{
+				rb.method(method.name(), requestBody);
+			}
 
 			final Request request = rb.build();
 			try (final Response response = client.newCall(request).execute())
