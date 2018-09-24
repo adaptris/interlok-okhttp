@@ -23,8 +23,8 @@ import com.adaptris.core.http.client.net.HttpProducer;
 import com.adaptris.core.util.Args;
 import com.adaptris.interlok.config.DataInputParameter;
 import com.adaptris.interlok.config.DataOutputParameter;
-import com.adaptris.okhttp.headers.request.None;
-import com.adaptris.okhttp.headers.response.Discard;
+import com.adaptris.okhttp.headers.request.NoRequestHeaders;
+import com.adaptris.okhttp.headers.response.DiscardResponseHeaders;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import okhttp3.MediaType;
@@ -50,7 +50,7 @@ import okhttp3.ResponseBody;
 })
 @DisplayOrder(order =
 {
-	"authenticator", "allowRedirect", "ignoreServerResponseCode", "alwaysSendPayload", "methodProvider", "contentTypeProvider", "requestHeaderProvider",
+	/*"authenticator",*/ "allowRedirect", "ignoreServerResponseCode", "alwaysSendPayload", "methodProvider", "contentTypeProvider", "requestHeaderProvider",
 	"requestBody", "responseHeaderHandler", "responseBody"
 })
 public class OKHTTPProducer extends HttpProducer<Request.Builder, Response>
@@ -76,8 +76,8 @@ public class OKHTTPProducer extends HttpProducer<Request.Builder, Response>
 	public OKHTTPProducer()
 	{
 		super();
-		setRequestHeaderProvider(new None());
-		setResponseHeaderHandler(new Discard());
+		setRequestHeaderProvider(new NoRequestHeaders()); // no additional request headers
+		setResponseHeaderHandler(new DiscardResponseHeaders()); // discard response headers
 	}
 
 	public OKHTTPProducer(final ProduceDestination destination)
@@ -86,6 +86,9 @@ public class OKHTTPProducer extends HttpProducer<Request.Builder, Response>
 		setDestination(destination);
 	}
 
+	/**
+	 * {@inheritDoc}.
+	 */
 	@Override
 	public void produce(final AdaptrisMessage msg, final ProduceDestination destination) throws ProduceException
 	{
@@ -107,7 +110,9 @@ public class OKHTTPProducer extends HttpProducer<Request.Builder, Response>
 			final Request.Builder rb = new Request.Builder().url(url);
 			getRequestHeaderProvider().addHeaders(msg, rb);
 
-			final RequestBody requestBody = RequestBody.create(MediaType.parse(getContentTypeProvider().getContentType(msg)), this.requestBody.extract(msg));
+			final MediaType mediaType = MediaType.parse(getContentTypeProvider().getContentType(msg));
+			final RequestBody requestBody = RequestBody.create(mediaType, this.requestBody.extract(msg));
+
 			final RequestMethod method = getMethod(msg);
 			logger.info("HTTP " + method.name() + " " + url);
 			rb.method(method.name(), requestBody);
