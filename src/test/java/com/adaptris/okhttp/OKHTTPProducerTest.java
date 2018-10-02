@@ -63,6 +63,6 @@ public class OKHTTPProducerTest
 
 		producer.produce(message, destination);
 
-		assertEquals(INVALID, message.getContent());
+		assertEquals(INVALID, message.getContent().trim());
 	}
 }
