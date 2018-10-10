@@ -15,7 +15,7 @@ ext {
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
   slf4jVersion = "1.7.25"
-  log4j2Version = "2.8.1"
+  log4j2Version = "2.9.1"
 }
 
 ext.hasGraphViz = { ->
@@ -80,12 +80,11 @@ dependencies {
   compile ("org.slf4j:slf4j-api:$slf4jVersion")
   compile ("com.squareup.okhttp3:okhttp:3.11.0")
 
-  annotationProcessor ("com.adaptris:interlok-common:$interlokCoreVersion") {changing= true}
+  annotationProcessor ("com.adaptris:interlok-core-apt:$interlokCoreVersion") {changing= true}
   umlDoclet("nl.talsmasoftware:umldoclet:1.1.0")
 
   testCompile ("junit:junit:4.12")
   testCompile ("com.adaptris:interlok-stubs:$interlokCoreVersion") { changing= true}
-  testCompile ("org.apache.derby:derby:10.14.2.0")
   testCompile ("org.apache.logging.log4j:log4j-core:$log4j2Version")
   testCompile ("org.apache.logging.log4j:log4j-1.2-api:$log4j2Version")
   testCompile ("org.apache.logging.log4j:log4j-api:$log4j2Version")
