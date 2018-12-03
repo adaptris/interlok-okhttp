@@ -1,21 +1,21 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
 ext {
-  interlokCoreVersion = project.hasProperty("interlokCoreVersion") ? project.getProperty("interlokCoreVersion") : "3.8-SNAPSHOT"
-  releaseVersion = project.hasProperty("releaseVersion") ? project.getProperty("releaseVersion") : "3.8-SNAPSHOT"
-  nexusBaseUrl = project.hasProperty("nexusBaseUrl") ? project.getProperty("nexusBaseUrl") : "https://development.adaptris.net/nexus"
-  mavenPublishUrl = project.hasProperty("mavenPublishUrl") ? project.getProperty("mavenPublishUrl") : nexusBaseUrl + "/content/repositories/snapshots"
+  interlokCoreVersion = project.hasProperty('interlokCoreVersion') ? project.getProperty('interlokCoreVersion') : '3.8-SNAPSHOT'
+  releaseVersion = project.hasProperty('releaseVersion') ? project.getProperty('releaseVersion') : '3.8-SNAPSHOT'
+  nexusBaseUrl = project.hasProperty('nexusBaseUrl') ? project.getProperty('nexusBaseUrl') : 'https://nexus.adaptris.net/nexus'
+  mavenPublishUrl = project.hasProperty('mavenPublishUrl') ? project.getProperty('mavenPublishUrl') : nexusBaseUrl + '/content/repositories/snapshots'
   javadocsBaseUrl = nexusBaseUrl + "/content/sites/javadocs/com/adaptris"
-  repoUsername = project.hasProperty("repoUsername") ? project.getProperty("repoUsername") : "unknown"
-  repoPassword = project.hasProperty("repoPassword") ? project.getProperty("repoPassword") : "unknown"
-  defaultNexusRepo = project.hasProperty("defaultNexusRepo") ? project.getProperty("defaultNexusRepo") : "https://repo1.maven.org/maven2/"
+  repoUsername = project.hasProperty('repoUsername') ? project.getProperty('repoUsername') : 'unknown'
+  repoPassword = project.hasProperty('repoPassword') ? project.getProperty('repoPassword') : 'unknown'
+  defaultNexusRepo = project.hasProperty('defaultNexusRepo') ? project.getProperty('defaultNexusRepo') : 'https://repo1.maven.org/maven2/'
   interlokJavadocs= project.hasProperty("interlokJavadocs") ? project.getProperty("interlokJavadocs") : javadocsBaseUrl + "/interlok-core/" + interlokCoreVersion
   interlokCommonJavadocs= project.hasProperty("interlokJavadocs") ? project.getProperty("interlokJavadocs") : javadocsBaseUrl + "/interlok-common/" + interlokCoreVersion
   componentName="Interlok/OK-HTTP"
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
   slf4jVersion = "1.7.25"
-  log4j2Version = "2.8.1"
+  log4j2Version = "2.9.1"
 }
 
 ext.hasGraphViz = { ->
@@ -47,11 +47,11 @@ version = releaseVersion
 def versionDir = "$buildDir/version"
 
 repositories {
-  jcenter()
+  mavenCentral()
   maven { url "$defaultNexusRepo" }
   maven { url "$nexusBaseUrl/content/groups/public" }
   maven { url "$nexusBaseUrl/content/repositories/snapshots" }
-  maven { url "$nexusBaseUrl/content/content/repositories/releases" }
+  maven { url "$nexusBaseUrl/content/repositories/releases" }
 }
 
 
@@ -78,19 +78,15 @@ dependencies {
   compile ("com.adaptris:interlok-common:$interlokCoreVersion") { changing= true}
 
   compile ("org.slf4j:slf4j-api:$slf4jVersion")
-  compile ("org.apache.commons:commons-compress:1.15")
-  compile ("com.thoughtworks.xstream:xstream:1.4.7")
-  compile ("com.squareup.okhttp3:okhttp:3.11.0")
+  compile ("com.squareup.okhttp3:okhttp:3.12.0")
 
-  annotationProcessor ("com.adaptris:interlok-common:$interlokCoreVersion") {changing= true}
-  umlDoclet("nl.talsmasoftware:umldoclet:1.0.18")
+  annotationProcessor ("com.adaptris:interlok-core-apt:$interlokCoreVersion") {changing= true}
+  umlDoclet("nl.talsmasoftware:umldoclet:1.1.2")
 
   testCompile ("junit:junit:4.12")
   testCompile ("com.adaptris:interlok-stubs:$interlokCoreVersion") { changing= true}
-  testCompile ("org.apache.derby:derby:10.14.2.0")
   testCompile ("org.apache.logging.log4j:log4j-core:$log4j2Version")
   testCompile ("org.apache.logging.log4j:log4j-1.2-api:$log4j2Version")
-  testCompile ("org.apache.logging.log4j:log4j-slf4j-impl:$log4j2Version")
   testCompile ("org.apache.logging.log4j:log4j-api:$log4j2Version")
   testCompile ("org.mockito:mockito-all:1.10.19")
 
