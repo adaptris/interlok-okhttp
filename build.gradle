@@ -1,4 +1,13 @@
 import org.apache.tools.ant.taskdefs.condition.Os
+plugins {
+  id 'java'
+  id 'maven'
+  id 'maven-publish'
+  id 'jacoco'
+  // Manage optional dependencies in maven pom.
+  id 'nebula.optional-base' version '4.0.1'
+  id 'com.github.spotbugs' version '1.6.10'
+}
 
 ext {
   interlokCoreVersion = project.hasProperty('interlokCoreVersion') ? project.getProperty('interlokCoreVersion') : '3.8-SNAPSHOT'
@@ -16,8 +25,8 @@ ext {
   componentName="Interlok/OK-HTTP"
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
-  slf4jVersion = "1.7.25"
-  log4j2Version = "2.9.1"
+  slf4jVersion = "1.7.26"
+  log4j2Version = "2.11.2"
 }
 
 ext.hasGraphViz = { ->
@@ -37,11 +46,6 @@ if (JavaVersion.current().isJava8Compatible()) {
     }
   }
 }
-
-apply plugin: "java"
-apply plugin: "maven"
-apply plugin: "maven-publish"
-apply plugin: "jacoco"
 
 sourceCompatibility = 1.8
 group = "com.adaptris"
@@ -81,7 +85,7 @@ dependencies {
   compile ("com.adaptris:interlok-common:$interlokCoreVersion") { changing= true}
 
   compile ("org.slf4j:slf4j-api:$slf4jVersion")
-  compile ("com.squareup.okhttp3:okhttp:3.12.1")
+  compile ("com.squareup.okhttp3:okhttp:3.14.0")
 
   annotationProcessor ("com.adaptris:interlok-core-apt:$interlokCoreVersion") {changing= true}
   umlDoclet("nl.talsmasoftware:umldoclet:1.1.3")
@@ -222,10 +226,6 @@ task umlJavadoc(type: Javadoc) {
   }
 }
 
-javadoc.dependsOn offlinePackageList,umlJavadoc
-clean.dependsOn deleteDerbyLog
-check.dependsOn jacocoTestReport
-
 artifacts {
   archives javadocJar
   archives examplesJar
@@ -262,3 +262,28 @@ publishing {
     }
   }
 }
+
+spotbugs {
+  // showProgress = "true"
+  effort = "max"
+  // Ignore failures?
+  // ignoreFailures = false
+
+  // We only care about "high priority" issues...
+  reportLevel = "high"
+}
+
+// disable spotbugsTests which checks our test code..
+spotbugsTest.enabled = false
+
+tasks.withType(com.github.spotbugs.SpotBugsTask) {
+  reports {
+    xml.enabled = false
+    html.enabled = true
+  }
+}
+
+javadoc.dependsOn offlinePackageList,umlJavadoc
+clean.dependsOn deleteDerbyLog
+check.dependsOn jacocoTestReport
+
