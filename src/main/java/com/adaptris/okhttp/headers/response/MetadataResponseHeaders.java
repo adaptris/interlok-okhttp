@@ -1,6 +1,6 @@
 package com.adaptris.okhttp.headers.response;
 
-import static org.apache.commons.lang.StringUtils.defaultIfEmpty;
+import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.ObjectUtils;
