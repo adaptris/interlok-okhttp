@@ -45,7 +45,7 @@ import okhttp3.ResponseBody;
 public class OKHTTPProducer extends HttpProducer<Request.Builder, Response> {
   private static final transient Logger logger = LoggerFactory.getLogger(OKHTTPProducer.class);
 
-  private final OkHttpClient client = new OkHttpClient();
+  private transient OkHttpClient client = new OkHttpClient();
 
   @Valid
   @AdvancedConfig
