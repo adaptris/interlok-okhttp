@@ -1,8 +1,10 @@
 package com.adaptris.okhttp;
 
 import static org.junit.Assert.assertTrue;
+import java.nio.charset.StandardCharsets;
 import org.junit.Test;
 import com.adaptris.core.AdaptrisMessage;
+import com.adaptris.core.BaseCase;
 import com.adaptris.core.ConfiguredProduceDestination;
 import com.adaptris.core.DefaultMessageFactory;
 import com.adaptris.core.ProduceDestination;
@@ -25,17 +27,28 @@ public class OKHTTPProducerTest {
   // private static final String RESPONSE = "Thank you for this dump. I hope you have a lovely
   // day!";
   // private static final String INVALID = "Only GET and POST methods are supported";
+  // private static final String PAYLOAD = "Spicy jalapeno bacon ipsum dolor amet tenderloin doner
+  // hamburger";
 
-  // Returns JSON containing your request
-  private static final String GET_URL = "http://httpbin.org/get";
-  private static final String POST_URL = "http://httpbin.org/post";
-  private static final String PUT_URL = "http://httpbin.org/put";
+  private static String TEST_GET_URL = "okhttp.get.url";
+  private static String TEST_GET_EXPECTED = "okhttp.get.expected";
 
-  private static final String PAYLOAD = "Spicy jalapeno bacon ipsum dolor amet tenderloin doner hamburger";
+  private static String TEST_POST_URL = "okhttp.post.url";
+  private static String TEST_POST_PAYLOAD = "okhttp.post.payload";
+  private static String TEST_POST_EXPECTED = "okhttp.post.expected";
+
+  private static String TEST_PUT_URL = "okhttp.put.url";
+  private static String TEST_PUT_PAYLOAD = "okhttp.put.payload";
+  private static String TEST_PUT_EXPECTED = "okhttp.put.expected";
+
 
   @Test
   public void testRequestGet() throws Exception {
-    final ProduceDestination destination = new ConfiguredProduceDestination(GET_URL);
+
+    final String url = getConfig(TEST_GET_URL);
+    final String expected = getConfig(TEST_GET_EXPECTED);
+
+    final ProduceDestination destination = new ConfiguredProduceDestination(url);
     final AdaptrisMessage message = new DefaultMessageFactory().newMessage();
     final OKHTTPProducer producer = new OKHTTPProducer(destination);
     message.addMessageHeader("accept", "application/json");
@@ -49,7 +62,7 @@ public class OKHTTPProducerTest {
     try {
       LifecycleHelper.initAndStart(sp);
       sp.doService(message);
-      assertTrue(message.getContent().contains("application/json"));
+      assertTrue(message.getContent().matches(expected));
     } finally {
       LifecycleHelper.stopAndClose(sp);
     }
@@ -58,9 +71,12 @@ public class OKHTTPProducerTest {
 
   @Test
   public void testRequestPost() throws Exception {
-    final ProduceDestination destination = new ConfiguredProduceDestination(POST_URL);
+    final String url = getConfig(TEST_POST_URL);
+    final String expected = getConfig(TEST_POST_EXPECTED);
+    final String payload = getConfig(TEST_POST_PAYLOAD);
+    final ProduceDestination destination = new ConfiguredProduceDestination(url);
     final AdaptrisMessage message = new DefaultMessageFactory().newMessage();
-    message.setContent(PAYLOAD, "UTF-8");
+    message.setContent(payload, StandardCharsets.UTF_8.name());
     final OKHTTPProducer producer = new OKHTTPProducer(destination);
 
     producer.setMethodProvider(new ConfiguredRequestMethodProvider(RequestMethodProvider.RequestMethod.POST));
@@ -71,7 +87,7 @@ public class OKHTTPProducerTest {
     try {
       LifecycleHelper.initAndStart(sp);
       sp.doService(message);
-      assertTrue(message.getContent().contains(PAYLOAD));
+      assertTrue(message.getContent().matches(expected));
     } finally {
       LifecycleHelper.stopAndClose(sp);
     }
@@ -79,9 +95,12 @@ public class OKHTTPProducerTest {
 
   @Test
   public void testRequestPut() throws Exception {
-    final ProduceDestination destination = new ConfiguredProduceDestination(PUT_URL);
+    final String url = getConfig(TEST_PUT_URL);
+    final String expected = getConfig(TEST_PUT_EXPECTED);
+    final String payload = getConfig(TEST_PUT_PAYLOAD);
+    final ProduceDestination destination = new ConfiguredProduceDestination(url);
     final AdaptrisMessage message = new DefaultMessageFactory().newMessage();
-    message.setContent(PAYLOAD, "UTF-8");
+    message.setContent(payload, StandardCharsets.UTF_8.name());
     final OKHTTPProducer producer = new OKHTTPProducer(destination);
     producer.setMethodProvider(
         new ConfiguredRequestMethodProvider(RequestMethodProvider.RequestMethod.PUT));
@@ -91,7 +110,7 @@ public class OKHTTPProducerTest {
     try {
       LifecycleHelper.initAndStart(sp);
       sp.doService(message);
-      assertTrue(message.getContent().contains(PAYLOAD));
+      assertTrue(message.getContent().matches(expected));
     } finally {
       LifecycleHelper.stopAndClose(sp);
     }
@@ -99,9 +118,12 @@ public class OKHTTPProducerTest {
 
   @Test(expected = ServiceException.class)
   public void testBroken() throws Exception {
-    final ProduceDestination destination = new ConfiguredProduceDestination(POST_URL);
+    final String url = getConfig(TEST_POST_URL);
+    final String payload = getConfig(TEST_POST_PAYLOAD);
+
+    final ProduceDestination destination = new ConfiguredProduceDestination(url);
     final AdaptrisMessage message = new DefectiveMessageFactory(WhenToBreak.METADATA_GET).newMessage();
-    message.setContent(PAYLOAD, "UTF-8");
+    message.setContent(payload, StandardCharsets.UTF_8.name());
     final OKHTTPProducer producer = new OKHTTPProducer(destination);
 
     producer.setMethodProvider(new ConfiguredRequestMethodProvider(RequestMethodProvider.RequestMethod.POST));
@@ -118,4 +140,8 @@ public class OKHTTPProducerTest {
     }
   }
 
+
+  private String getConfig(String key) {
+    return BaseCase.PROPERTIES.getProperty(key);
+  }
 }
