@@ -39,8 +39,9 @@ import okhttp3.ResponseBody;
     metadata = {"adphttpresponse"
 
     }, recommended = {NullConnection.class})
-@DisplayOrder(order = {"allowRedirect", "ignoreServerResponseCode", "alwaysSendPayload", "methodProvider",
-    "contentTypeProvider", "requestHeaderProvider", "requestBody", "responseHeaderHandler", "responseBody"})
+@DisplayOrder(order = {"url", "allowRedirect", "ignoreServerResponseCode", "alwaysSendPayload",
+    "methodProvider", "contentTypeProvider", "requestHeaderProvider", "requestBody",
+    "responseHeaderHandler", "responseBody"})
 public class OKHTTPProducer extends HttpProducer<Request.Builder, Response> {
   private static final transient Logger logger = LoggerFactory.getLogger(OKHTTPProducer.class);
 
