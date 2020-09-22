@@ -5,9 +5,7 @@ import java.nio.charset.StandardCharsets;
 import org.junit.Test;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.BaseCase;
-import com.adaptris.core.ConfiguredProduceDestination;
 import com.adaptris.core.DefaultMessageFactory;
-import com.adaptris.core.ProduceDestination;
 import com.adaptris.core.ServiceException;
 import com.adaptris.core.StandaloneProducer;
 import com.adaptris.core.common.StringPayloadDataInputParameter;
@@ -48,9 +46,8 @@ public class OKHTTPProducerTest {
     final String url = getConfig(TEST_GET_URL);
     final String expected = getConfig(TEST_GET_EXPECTED);
 
-    final ProduceDestination destination = new ConfiguredProduceDestination(url);
     final AdaptrisMessage message = new DefaultMessageFactory().newMessage();
-    final OKHTTPProducer producer = new OKHTTPProducer(destination);
+    final OKHTTPProducer producer = new OKHTTPProducer().withURL(url);
     message.addMessageHeader("accept", "application/json");
 
     producer.setMethodProvider(new ConfiguredRequestMethodProvider(RequestMethodProvider.RequestMethod.GET));
@@ -74,10 +71,9 @@ public class OKHTTPProducerTest {
     final String url = getConfig(TEST_POST_URL);
     final String expected = getConfig(TEST_POST_EXPECTED);
     final String payload = getConfig(TEST_POST_PAYLOAD);
-    final ProduceDestination destination = new ConfiguredProduceDestination(url);
     final AdaptrisMessage message = new DefaultMessageFactory().newMessage();
     message.setContent(payload, StandardCharsets.UTF_8.name());
-    final OKHTTPProducer producer = new OKHTTPProducer(destination);
+    final OKHTTPProducer producer = new OKHTTPProducer().withURL(url);
 
     producer.setMethodProvider(new ConfiguredRequestMethodProvider(RequestMethodProvider.RequestMethod.POST));
     producer.setRequestBody(new StringPayloadDataInputParameter());
@@ -98,10 +94,9 @@ public class OKHTTPProducerTest {
     final String url = getConfig(TEST_PUT_URL);
     final String expected = getConfig(TEST_PUT_EXPECTED);
     final String payload = getConfig(TEST_PUT_PAYLOAD);
-    final ProduceDestination destination = new ConfiguredProduceDestination(url);
     final AdaptrisMessage message = new DefaultMessageFactory().newMessage();
     message.setContent(payload, StandardCharsets.UTF_8.name());
-    final OKHTTPProducer producer = new OKHTTPProducer(destination);
+    final OKHTTPProducer producer = new OKHTTPProducer().withURL(url);
     producer.setMethodProvider(
         new ConfiguredRequestMethodProvider(RequestMethodProvider.RequestMethod.PUT));
     producer.setRequestBody(new StringPayloadDataInputParameter());
@@ -121,10 +116,9 @@ public class OKHTTPProducerTest {
     final String url = getConfig(TEST_POST_URL);
     final String payload = getConfig(TEST_POST_PAYLOAD);
 
-    final ProduceDestination destination = new ConfiguredProduceDestination(url);
     final AdaptrisMessage message = new DefectiveMessageFactory(WhenToBreak.METADATA_GET).newMessage();
     message.setContent(payload, StandardCharsets.UTF_8.name());
-    final OKHTTPProducer producer = new OKHTTPProducer(destination);
+    final OKHTTPProducer producer = new OKHTTPProducer().withURL(url);
 
     producer.setMethodProvider(new ConfiguredRequestMethodProvider(RequestMethodProvider.RequestMethod.POST));
     producer.setRequestBody(new StringPayloadDataInputParameter());

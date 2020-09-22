@@ -10,7 +10,6 @@ import com.adaptris.annotation.ComponentProfile;
 import com.adaptris.annotation.DisplayOrder;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.NullConnection;
-import com.adaptris.core.ProduceDestination;
 import com.adaptris.core.ProduceException;
 import com.adaptris.core.common.PayloadStreamInputParameter;
 import com.adaptris.core.common.PayloadStreamOutputParameter;
@@ -40,8 +39,9 @@ import okhttp3.ResponseBody;
     metadata = {"adphttpresponse"
 
     }, recommended = {NullConnection.class})
-@DisplayOrder(order = {"allowRedirect", "ignoreServerResponseCode", "alwaysSendPayload", "methodProvider",
-    "contentTypeProvider", "requestHeaderProvider", "requestBody", "responseHeaderHandler", "responseBody"})
+@DisplayOrder(order = {"url", "allowRedirect", "ignoreServerResponseCode", "alwaysSendPayload",
+    "methodProvider", "contentTypeProvider", "requestHeaderProvider", "requestBody",
+    "responseHeaderHandler", "responseBody"})
 public class OKHTTPProducer extends HttpProducer<Request.Builder, Response> {
   private static final transient Logger logger = LoggerFactory.getLogger(OKHTTPProducer.class);
 
@@ -63,35 +63,25 @@ public class OKHTTPProducer extends HttpProducer<Request.Builder, Response> {
     setResponseBody(new StringPayloadDataOutputParameter());
   }
 
-  public OKHTTPProducer(final ProduceDestination destination) {
-    this();
-    setDestination(destination);
-  }
-
-  /**
-   * {@inheritDoc}.
-   */
   @Override
-  public void produce(final AdaptrisMessage msg, final ProduceDestination destination) throws ProduceException {
-    doRequest(msg, destination, defaultTimeout());
+  protected void doProduce(AdaptrisMessage msg, String endpointUrl) throws ProduceException {
+    doRequest(msg, endpointUrl, defaultTimeout());
   }
 
-  /**
-   * {@inheritDoc}.
-   */
   @Override
   @SuppressWarnings("hiding")
-  protected AdaptrisMessage doRequest(final AdaptrisMessage msg, final ProduceDestination dest, final long timeout)
+  protected AdaptrisMessage doRequest(final AdaptrisMessage msg, final String endpointUrl,
+      final long timeout)
       throws ProduceException {
     logger.info("OKHTTP producer request");
     try {
-      final URL url = new URL(dest.getDestination(msg));
+      final URL url = new URL(endpointUrl);
 
       final Request.Builder rb = new Request.Builder().url(url);
       getRequestHeaderProvider().addHeaders(msg, rb);
 
       final MediaType mediaType = MediaType.parse(getContentTypeProvider().getContentType(msg));
-      final RequestBody requestBody = RequestBody.create(mediaType, this.getRequestBody().extract(msg));
+      final RequestBody requestBody = RequestBody.create(mediaType, getRequestBody().extract(msg));
 
       final RequestMethod method = getMethod(msg);
       logger.info("HTTP " + method.name() + " " + url);
@@ -118,7 +108,7 @@ public class OKHTTPProducer extends HttpProducer<Request.Builder, Response> {
 
   /**
    * Get the request body.
-   * 
+   *
    * @return The request body.
    */
   public DataInputParameter<String> getRequestBody() {
@@ -127,7 +117,7 @@ public class OKHTTPProducer extends HttpProducer<Request.Builder, Response> {
 
   /**
    * Set where the HTTP Request body is going to come from.
-   * 
+   *
    * @param input The input; default is {@link PayloadStreamInputParameter} which is the only implementation currently.
    */
   public void setRequestBody(final DataInputParameter<String> input) {
@@ -136,7 +126,7 @@ public class OKHTTPProducer extends HttpProducer<Request.Builder, Response> {
 
   /**
    * Get the response body.
-   * 
+   *
    * @return The response body,
    */
   public DataOutputParameter<String> getResponseBody() {
@@ -145,18 +135,10 @@ public class OKHTTPProducer extends HttpProducer<Request.Builder, Response> {
 
   /**
    * Set where the HTTP Response Body will be written to.
-   * 
+   *
    * @param output The output; default is {@link PayloadStreamOutputParameter}.
    */
   public void setResponseBody(final DataOutputParameter<String> output) {
     responseBody = Args.notNull(output, "data output");
-  }
-
-  /**
-   * {@inheritDoc}.
-   */
-  @Override
-  public void prepare() {
-    // empty method
   }
 }
