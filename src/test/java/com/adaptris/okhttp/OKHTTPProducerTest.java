@@ -1,10 +1,12 @@
 package com.adaptris.okhttp;
 
 import static org.junit.Assert.assertTrue;
+
 import java.nio.charset.StandardCharsets;
+
 import org.junit.Test;
+
 import com.adaptris.core.AdaptrisMessage;
-import com.adaptris.core.BaseCase;
 import com.adaptris.core.DefaultMessageFactory;
 import com.adaptris.core.ServiceException;
 import com.adaptris.core.StandaloneProducer;
@@ -15,6 +17,7 @@ import com.adaptris.core.metadata.RegexMetadataFilter;
 import com.adaptris.core.stubs.DefectiveMessageFactory;
 import com.adaptris.core.stubs.DefectiveMessageFactory.WhenToBreak;
 import com.adaptris.core.util.LifecycleHelper;
+import com.adaptris.interlok.junit.scaffolding.BaseCase;
 import com.adaptris.okhttp.headers.request.MetadataRequestHeaders;
 import com.adaptris.okhttp.headers.response.CompositeResponseHeaders;
 import com.adaptris.okhttp.headers.response.MetadataResponseHeaders;
