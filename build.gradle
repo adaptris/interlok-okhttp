@@ -23,8 +23,8 @@ ext {
 
   interlokJavadocs= project.hasProperty('interlokJavadocs') ? project.getProperty('interlokJavadocs') : javadocsBaseUrl + "/interlok-core/" + interlokCoreVersion
   interlokCommonJavadocs= project.hasProperty('interlokCommonJavadocs') ? project.getProperty('interlokCommonJavadocs') : javadocsBaseUrl + "/interlok-common/" + interlokCoreVersion
-  componentName="Interlok HTTP/okhttp"
-  componentDesc="HTTP producer using the OK-HTTP library"
+  componentName="Interlok HTTP/OkHttp"
+  componentDesc="HTTP producer using the OkHttp library"
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
   slf4jVersion = "1.7.30"
