@@ -125,7 +125,7 @@ dependencies {
   api ("com.adaptris:interlok-common:$interlokCoreVersion") { changing= true}
 
   implementation ("org.slf4j:slf4j-api:$slf4jVersion")
-  implementation ("com.squareup.okhttp3:okhttp:4.9.2")
+  implementation ("com.squareup.okhttp3:okhttp:4.9.3")
 
   annotationProcessor ("com.adaptris:interlok-core-apt:$interlokCoreVersion") {changing= true}
   umlDoclet("nl.talsmasoftware:umldoclet:1.1.4")
