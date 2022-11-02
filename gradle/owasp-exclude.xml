@@ -14,4 +14,12 @@
     <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin\-stdlib\-common@.*$</packageUrl>
     <cve>CVE-2020-15824</cve>
   </suppress>
+  <suppress>
+    <notes><![CDATA[
+	file name: okhttp-4.10.0.jar
+    False positive: https://github.com/square/okhttp/issues/6724, https://github.com/OSSIndex/vulns/issues/296
+    ]]></notes>
+    <packageUrl regex="true">^pkg:maven/com\.squareup\.okhttp3/okhttp@.*$</packageUrl>
+    <vulnerabilityName>CVE-2021-0341</vulnerabilityName>
+  </suppress>
 </suppressions>
