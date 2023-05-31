@@ -1,9 +1,12 @@
 package com.adaptris.okhttp;
 
 import java.net.URL;
+
 import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.adaptris.annotation.AdapterComponent;
 import com.adaptris.annotation.AdvancedConfig;
 import com.adaptris.annotation.ComponentProfile;
@@ -23,6 +26,7 @@ import com.adaptris.interlok.config.DataOutputParameter;
 import com.adaptris.okhttp.headers.request.NoRequestHeaders;
 import com.adaptris.okhttp.headers.response.DiscardResponseHeaders;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -35,13 +39,12 @@ import okhttp3.ResponseBody;
  */
 @XStreamAlias("okhttp-http-producer")
 @AdapterComponent
-@ComponentProfile(summary = "Make a HTTP request to a remote server using the OKHTTP library", tag = "producer,http,https",
-    metadata = {"adphttpresponse"
+@ComponentProfile(summary = "Make a HTTP request to a remote server using the OKHTTP library", tag = "producer,http,https", metadata = {
+    "adphttpresponse"
 
-    }, recommended = {NullConnection.class})
-@DisplayOrder(order = {"url", "allowRedirect", "ignoreServerResponseCode", "alwaysSendPayload",
-    "methodProvider", "contentTypeProvider", "requestHeaderProvider", "requestBody",
-    "responseHeaderHandler", "responseBody"})
+}, recommended = { NullConnection.class })
+@DisplayOrder(order = { "url", "allowRedirect", "ignoreServerResponseCode", "alwaysSendPayload", "methodProvider", "contentTypeProvider",
+    "requestHeaderProvider", "requestBody", "responseHeaderHandler", "responseBody" })
 public class OKHTTPProducer extends HttpProducer<Request.Builder, Response> {
   private static final transient Logger logger = LoggerFactory.getLogger(OKHTTPProducer.class);
 
@@ -70,9 +73,7 @@ public class OKHTTPProducer extends HttpProducer<Request.Builder, Response> {
 
   @Override
   @SuppressWarnings("hiding")
-  protected AdaptrisMessage doRequest(final AdaptrisMessage msg, final String endpointUrl,
-      final long timeout)
-      throws ProduceException {
+  protected AdaptrisMessage doRequest(final AdaptrisMessage msg, final String endpointUrl, final long timeout) throws ProduceException {
     logger.info("OKHTTP producer request");
     try {
       final URL url = new URL(endpointUrl);
@@ -81,7 +82,7 @@ public class OKHTTPProducer extends HttpProducer<Request.Builder, Response> {
       getRequestHeaderProvider().addHeaders(msg, rb);
 
       final MediaType mediaType = MediaType.parse(getContentTypeProvider().getContentType(msg));
-      final RequestBody requestBody = RequestBody.create(mediaType, getRequestBody().extract(msg));
+      final RequestBody requestBody = RequestBody.create(getRequestBody().extract(msg), mediaType);
 
       final RequestMethod method = getMethod(msg);
       logger.info("HTTP " + method.name() + " " + url);
@@ -118,7 +119,8 @@ public class OKHTTPProducer extends HttpProducer<Request.Builder, Response> {
   /**
    * Set where the HTTP Request body is going to come from.
    *
-   * @param input The input; default is {@link PayloadStreamInputParameter} which is the only implementation currently.
+   * @param input
+   *          The input; default is {@link PayloadStreamInputParameter} which is the only implementation currently.
    */
   public void setRequestBody(final DataInputParameter<String> input) {
     requestBody = Args.notNull(input, "data input");
@@ -136,9 +138,11 @@ public class OKHTTPProducer extends HttpProducer<Request.Builder, Response> {
   /**
    * Set where the HTTP Response Body will be written to.
    *
-   * @param output The output; default is {@link PayloadStreamOutputParameter}.
+   * @param output
+   *          The output; default is {@link PayloadStreamOutputParameter}.
    */
   public void setResponseBody(final DataOutputParameter<String> output) {
     responseBody = Args.notNull(output, "data output");
   }
+
 }

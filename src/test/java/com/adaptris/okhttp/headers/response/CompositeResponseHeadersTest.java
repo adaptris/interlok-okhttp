@@ -1,9 +1,11 @@
 package com.adaptris.okhttp.headers.response;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 public class CompositeResponseHeadersTest {
 
@@ -12,7 +14,6 @@ public class CompositeResponseHeadersTest {
     CompositeResponseHeaders response = new CompositeResponseHeaders(new DiscardResponseHeaders());
     assertEquals(1, response.getHandlers().size());
     assertEquals(DiscardResponseHeaders.class, response.getHandlers().get(0).getClass());
-
   }
 
   @Test

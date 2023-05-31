@@ -19,46 +19,39 @@ import okhttp3.Request;
  * Implementation of {@link RequestHeaderProvider} that applies configured values as headers.
  */
 @XStreamAlias("okhttp-configured-request-headers")
-public class ConfiguredRequestHeaders implements RequestHeaderProvider<Request.Builder>
-{
-	private static final transient Logger log = LoggerFactory.getLogger(ConfiguredRequestHeaders.class);
+public class ConfiguredRequestHeaders implements RequestHeaderProvider<Request.Builder> {
+  private static final transient Logger log = LoggerFactory.getLogger(ConfiguredRequestHeaders.class);
 
-	@NotNull
-	@AutoPopulated
-	private KeyValuePairSet headers;
+  @NotNull
+  @AutoPopulated
+  private KeyValuePairSet headers;
 
-	public ConfiguredRequestHeaders()
-	{
-		headers = new KeyValuePairSet();
-	}
+  public ConfiguredRequestHeaders() {
+    headers = new KeyValuePairSet();
+  }
 
-	@Override
-	public Request.Builder addHeaders(final AdaptrisMessage msg, final Request.Builder target)
-	{
-		for (final KeyValuePair k : getHeaders())
-		{
-			log.trace("Adding Request Property [{}: {}]", k.getKey(), k.getValue());
-			target.addHeader(k.getKey(), k.getValue());
-		}
-		return target;
-	}
+  @Override
+  public Request.Builder addHeaders(final AdaptrisMessage msg, final Request.Builder target) {
+    for (final KeyValuePair k : getHeaders()) {
+      log.trace("Adding Request Property [{}: {}]", k.getKey(), k.getValue());
+      target.addHeader(k.getKey(), k.getValue());
+    }
+    return target;
+  }
 
-	public KeyValuePairSet getHeaders()
-	{
-		return headers;
-	}
+  public KeyValuePairSet getHeaders() {
+    return headers;
+  }
 
-	public void setHeaders(final KeyValuePairSet headers)
-	{
-		this.headers = Args.notNull(headers, "headers");
-	}
+  public void setHeaders(final KeyValuePairSet headers) {
+    this.headers = Args.notNull(headers, "headers");
+  }
 
-	public ConfiguredRequestHeaders withHeaders(final KeyValuePair... keyValuePairs)
-	{
-		for (final KeyValuePair pair : keyValuePairs)
-		{
-			headers.add(pair);
-		}
-		return this;
-	}
+  public ConfiguredRequestHeaders withHeaders(final KeyValuePair... keyValuePairs) {
+    for (final KeyValuePair pair : keyValuePairs) {
+      headers.add(pair);
+    }
+    return this;
+  }
+
 }
