@@ -1,10 +1,11 @@
 package com.adaptris.okhttp;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.charset.StandardCharsets;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.DefaultMessageFactory;
@@ -42,7 +43,6 @@ public class OKHTTPProducerTest {
   private static String TEST_PUT_PAYLOAD = "okhttp.put.payload";
   private static String TEST_PUT_EXPECTED = "okhttp.put.expected";
 
-
   @Test
   public void testRequestGet() throws Exception {
 
@@ -66,7 +66,6 @@ public class OKHTTPProducerTest {
     } finally {
       LifecycleHelper.stopAndClose(sp);
     }
-
   }
 
   @Test
@@ -100,8 +99,7 @@ public class OKHTTPProducerTest {
     final AdaptrisMessage message = new DefaultMessageFactory().newMessage();
     message.setContent(payload, StandardCharsets.UTF_8.name());
     final OKHTTPProducer producer = new OKHTTPProducer().withURL(url);
-    producer.setMethodProvider(
-        new ConfiguredRequestMethodProvider(RequestMethodProvider.RequestMethod.PUT));
+    producer.setMethodProvider(new ConfiguredRequestMethodProvider(RequestMethodProvider.RequestMethod.PUT));
     producer.setRequestBody(new StringPayloadDataInputParameter());
 
     StandaloneProducer sp = new StandaloneProducer(producer);
@@ -114,7 +112,7 @@ public class OKHTTPProducerTest {
     }
   }
 
-  @Test(expected = ServiceException.class)
+  @Test
   public void testBroken() throws Exception {
     final String url = getConfig(TEST_POST_URL);
     final String payload = getConfig(TEST_POST_PAYLOAD);
@@ -131,12 +129,12 @@ public class OKHTTPProducerTest {
     StandaloneProducer sp = new StandaloneProducer(producer);
     try {
       LifecycleHelper.initAndStart(sp);
-      sp.doService(message);
+
+      assertThrows(ServiceException.class, () -> sp.doService(message));
     } finally {
       LifecycleHelper.stopAndClose(sp);
     }
   }
-
 
   private String getConfig(String key) {
     return BaseCase.PROPERTIES.getProperty(key);
