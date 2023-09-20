@@ -128,6 +128,7 @@ dependencies {
   api ("com.adaptris:interlok-common:$interlokCoreVersion") { changing= true}
 
   implementation ("org.slf4j:slf4j-api:$slf4jVersion")
+  implementation ("com.squareup.okio:okio:3.5.0")
   implementation ("com.squareup.okhttp3:okhttp:4.11.0")
 
   annotationProcessor ("com.adaptris:interlok-core-apt:$interlokCoreVersion") {changing= true}
