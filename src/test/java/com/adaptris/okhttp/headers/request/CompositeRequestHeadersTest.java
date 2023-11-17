@@ -1,11 +1,14 @@
 package com.adaptris.okhttp.headers.request;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
+import org.junit.jupiter.api.Test;
+
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.AdaptrisMessageFactory;
 import com.adaptris.util.KeyValuePair;
+
 import okhttp3.Request;
 
 public class CompositeRequestHeadersTest {
@@ -16,7 +19,6 @@ public class CompositeRequestHeadersTest {
     assertEquals(1, header.getProviders().size());
     assertEquals(ConfiguredRequestHeaders.class, header.getProviders().get(0).getClass());
   }
-
 
   @Test
   public void testAddProvider() throws Exception {

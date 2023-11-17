@@ -2,10 +2,12 @@ package com.adaptris.okhttp.headers.request;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.adaptris.annotation.AdvancedConfig;
 import com.adaptris.annotation.InputFieldDefault;
 import com.adaptris.core.AdaptrisMessage;
@@ -16,12 +18,13 @@ import com.adaptris.core.metadata.MetadataFilter;
 import com.adaptris.core.metadata.NoOpMetadataFilter;
 import com.adaptris.core.util.Args;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 import okhttp3.Request;
 
 /**
- * Implementation of {@link RequestHeaderProvider} that applies {@link com.adaptris.core.AdaptrisMessage} metadata as
- * headers to a OK HTTP request.
- * 
+ * Implementation of {@link RequestHeaderProvider} that applies {@link com.adaptris.core.AdaptrisMessage} metadata as headers to a OK HTTP
+ * request.
+ *
  * @config okhttp-metadata-request-headers
  */
 @XStreamAlias("okhttp-metadata-request-headers")
@@ -67,11 +70,12 @@ public class MetadataRequestHeaders implements RequestHeaderProvider<Request.Bui
 
   /**
    * Set the filter to be applied to metadata before adding as request properties.
-   * 
-   * @param mf the filter.
+   *
+   * @param mf
+   *          the filter.
    */
   public void setFilter(final MetadataFilter mf) {
-    this.filter = Args.notNull(mf, "metadata filter");
+    filter = Args.notNull(mf, "metadata filter");
   }
 
   public Boolean getUnfold() {
@@ -81,14 +85,15 @@ public class MetadataRequestHeaders implements RequestHeaderProvider<Request.Bui
   /**
    * Unfold headers onto a single line.
    * <p>
-   * RFC7230 deprecates the folding of headers onto multiple lines; so HTTP headers are expected to be single line. This param
-   * allows you to enforce that unfolding metadata values happens before writing them as request properties.
+   * RFC7230 deprecates the folding of headers onto multiple lines; so HTTP headers are expected to be single line. This param allows you to
+   * enforce that unfolding metadata values happens before writing them as request properties.
    * </p>
-   * 
-   * @param b true to unfold values (default is false to preserve legacy behaviour).
+   *
+   * @param b
+   *          true to unfold values (default is false to preserve legacy behaviour).
    */
   public void setUnfold(final Boolean b) {
-    this.unfold = b;
+    unfold = b;
   }
 
   private boolean unfold() {
@@ -101,4 +106,5 @@ public class MetadataRequestHeaders implements RequestHeaderProvider<Request.Bui
     }
     return s;
   }
+
 }
