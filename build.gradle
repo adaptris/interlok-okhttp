@@ -28,7 +28,7 @@ ext {
   componentDesc="HTTP producer using the OkHttp library"
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
-  slf4jVersion = "2.0.11"
+  slf4jVersion = "2.0.12"
 }
 
 // If graphviz is installed via scoop, plantuml doesn't find it because it's not
