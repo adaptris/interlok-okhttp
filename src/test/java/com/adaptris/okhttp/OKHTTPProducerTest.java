@@ -43,6 +43,7 @@ public class OKHTTPProducerTest {
   private static String TEST_PUT_PAYLOAD = "okhttp.put.payload";
   private static String TEST_PUT_EXPECTED = "okhttp.put.expected";
 
+  // If this test fails it may be because the mock request api is not available
   @Test
   public void testRequestGet() throws Exception {
 
@@ -68,6 +69,7 @@ public class OKHTTPProducerTest {
     }
   }
 
+  // If this test fails it may be because the mock request api is not available
   @Test
   public void testRequestPost() throws Exception {
     final String url = getConfig(TEST_POST_URL);
@@ -91,6 +93,7 @@ public class OKHTTPProducerTest {
     }
   }
 
+  // If this test fails it may be because the mock request api is not available
   @Test
   public void testRequestPut() throws Exception {
     final String url = getConfig(TEST_PUT_URL);
