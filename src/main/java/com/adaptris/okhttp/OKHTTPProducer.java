@@ -145,4 +145,7 @@ public class OKHTTPProducer extends HttpProducer<Request.Builder, Response> {
     responseBody = Args.notNull(output, "data output");
   }
 
+  public void setClient(OkHttpClient client) {
+    this.client = client;
+  }
 }

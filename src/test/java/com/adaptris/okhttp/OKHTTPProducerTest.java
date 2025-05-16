@@ -2,9 +2,13 @@ package com.adaptris.okhttp;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.nio.charset.StandardCharsets;
 
+import okhttp3.*;
 import org.junit.jupiter.api.Test;
 
 import com.adaptris.core.AdaptrisMessage;
@@ -25,13 +29,6 @@ import com.adaptris.okhttp.headers.response.MetadataResponseHeaders;
 
 public class OKHTTPProducerTest {
 
-  // private static final String URL = "http://ptsv2.com/t/t5zm1-1537779838/post";
-  // private static final String RESPONSE = "Thank you for this dump. I hope you have a lovely
-  // day!";
-  // private static final String INVALID = "Only GET and POST methods are supported";
-  // private static final String PAYLOAD = "Spicy jalapeno bacon ipsum dolor amet tenderloin doner
-  // hamburger";
-
   private static String TEST_GET_URL = "okhttp.get.url";
   private static String TEST_GET_EXPECTED = "okhttp.get.expected";
 
@@ -43,73 +40,116 @@ public class OKHTTPProducerTest {
   private static String TEST_PUT_PAYLOAD = "okhttp.put.payload";
   private static String TEST_PUT_EXPECTED = "okhttp.put.expected";
 
-  // If this test fails it may be because the mock request api is not available
   @Test
   public void testRequestGet() throws Exception {
-
-    final String url = getConfig(TEST_GET_URL);
-    final String expected = getConfig(TEST_GET_EXPECTED);
+    final String url = "http://mocked.url/get";
 
     final AdaptrisMessage message = new DefaultMessageFactory().newMessage();
-    final OKHTTPProducer producer = new OKHTTPProducer().withURL(url);
     message.addMessageHeader("accept", "application/json");
 
+    final OKHTTPProducer producer = new OKHTTPProducer().withURL(url);
     producer.setMethodProvider(new ConfiguredRequestMethodProvider(RequestMethodProvider.RequestMethod.GET));
     producer.setRequestHeaderProvider(new MetadataRequestHeaders(new RegexMetadataFilter().withIncludePatterns("accept")));
     producer.setRequestBody(new StringPayloadDataInputParameter());
     producer.setResponseHeaderHandler(new MetadataResponseHeaders(""));
 
+    // Mocking the HTTP client and response
+    OkHttpClient mockClient = mock(OkHttpClient.class);
+    Response mockResponse = mock(Response.class);
+    ResponseBody mockResponseBody = mock(ResponseBody.class);
+    Headers mockHeaders = new Headers.Builder().add("Content-Type", "application/json").build();
+
+    when(mockResponseBody.string()).thenReturn(TEST_GET_EXPECTED);
+    when(mockResponse.body()).thenReturn(mockResponseBody);
+    when(mockResponse.isSuccessful()).thenReturn(true);
+    when(mockResponse.headers()).thenReturn(mockHeaders);
+
+    Call mockCall = mock(Call.class);
+    when(mockCall.execute()).thenReturn(mockResponse);
+    when(mockClient.newCall(any(Request.class))).thenReturn(mockCall);
+
+    producer.setClient(mockClient);
+
     StandaloneProducer sp = new StandaloneProducer(producer);
     try {
       LifecycleHelper.initAndStart(sp);
       sp.doService(message);
-      assertTrue(message.getContent().matches(expected));
+      assertTrue(message.getContent().matches(TEST_GET_EXPECTED));
     } finally {
       LifecycleHelper.stopAndClose(sp);
     }
   }
 
-  // If this test fails it may be because the mock request api is not available
   @Test
   public void testRequestPost() throws Exception {
-    final String url = getConfig(TEST_POST_URL);
-    final String expected = getConfig(TEST_POST_EXPECTED);
-    final String payload = getConfig(TEST_POST_PAYLOAD);
-    final AdaptrisMessage message = new DefaultMessageFactory().newMessage();
-    message.setContent(payload, StandardCharsets.UTF_8.name());
-    final OKHTTPProducer producer = new OKHTTPProducer().withURL(url);
+    final String url = "http://mocked.url/post";
 
+    final AdaptrisMessage message = new DefaultMessageFactory().newMessage();
+    message.setContent(TEST_POST_PAYLOAD, StandardCharsets.UTF_8.name());
+
+    final OKHTTPProducer producer = new OKHTTPProducer().withURL(url);
     producer.setMethodProvider(new ConfiguredRequestMethodProvider(RequestMethodProvider.RequestMethod.POST));
     producer.setRequestBody(new StringPayloadDataInputParameter());
     producer.setResponseHeaderHandler(new CompositeResponseHeaders(new MetadataResponseHeaders("")));
 
+    // Mocking the HTTP client and response
+    OkHttpClient mockClient = mock(OkHttpClient.class);
+    Response mockResponse = mock(Response.class);
+    ResponseBody mockResponseBody = mock(ResponseBody.class);
+    Headers mockHeaders = new Headers.Builder().add("Content-Type", "application/json").build();
+
+    when(mockResponseBody.string()).thenReturn(TEST_POST_EXPECTED);
+    when(mockResponse.body()).thenReturn(mockResponseBody);
+    when(mockResponse.isSuccessful()).thenReturn(true);
+    when(mockResponse.headers()).thenReturn(mockHeaders);
+
+    Call mockCall = mock(Call.class);
+    when(mockCall.execute()).thenReturn(mockResponse);
+    when(mockClient.newCall(any(Request.class))).thenReturn(mockCall);
+
+    producer.setClient(mockClient);
+
     StandaloneProducer sp = new StandaloneProducer(producer);
     try {
       LifecycleHelper.initAndStart(sp);
       sp.doService(message);
-      assertTrue(message.getContent().matches(expected));
+      assertTrue(message.getContent().matches(TEST_POST_EXPECTED));
     } finally {
       LifecycleHelper.stopAndClose(sp);
     }
   }
 
-  // If this test fails it may be because the mock request api is not available
   @Test
   public void testRequestPut() throws Exception {
-    final String url = getConfig(TEST_PUT_URL);
-    final String expected = getConfig(TEST_PUT_EXPECTED);
-    final String payload = getConfig(TEST_PUT_PAYLOAD);
+    final String url = "http://mocked.url/put";
+
     final AdaptrisMessage message = new DefaultMessageFactory().newMessage();
-    message.setContent(payload, StandardCharsets.UTF_8.name());
+    message.setContent(TEST_PUT_PAYLOAD, StandardCharsets.UTF_8.name());
+
     final OKHTTPProducer producer = new OKHTTPProducer().withURL(url);
     producer.setMethodProvider(new ConfiguredRequestMethodProvider(RequestMethodProvider.RequestMethod.PUT));
     producer.setRequestBody(new StringPayloadDataInputParameter());
+
+    // Mocking the HTTP client and response
+    OkHttpClient mockClient = mock(OkHttpClient.class);
+    Response mockResponse = mock(Response.class);
+    ResponseBody mockResponseBody = mock(ResponseBody.class);
+
+    when(mockResponseBody.string()).thenReturn(TEST_PUT_EXPECTED);
+    when(mockResponse.body()).thenReturn(mockResponseBody);
+    when(mockResponse.isSuccessful()).thenReturn(true);
+
+    Call mockCall = mock(Call.class);
+    when(mockCall.execute()).thenReturn(mockResponse);
+    when(mockClient.newCall(any(Request.class))).thenReturn(mockCall);
+
+    producer.setClient(mockClient);
 
     StandaloneProducer sp = new StandaloneProducer(producer);
     try {
       LifecycleHelper.initAndStart(sp);
       sp.doService(message);
-      assertTrue(message.getContent().matches(expected));
+      assertTrue(message.getContent().matches(TEST_PUT_EXPECTED));
     } finally {
       LifecycleHelper.stopAndClose(sp);
     }
