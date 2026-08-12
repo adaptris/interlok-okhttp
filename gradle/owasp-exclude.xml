@@ -41,4 +41,14 @@
     ]]></notes>
     <packageUrl regex="true">^pkg:maven/org\.eclipse\.jetty(\.http2|\.websocket)?/.+@10\.0\.26$</packageUrl>
     <cve>CVE-2026-2332</cve>
+    <cve>CVE-2026-6790</cve>
+    <cve>CVE-2026-10050</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+      kotlin-stdlib 2.2.0 is the version pulled in by OkHttp. No compatible patch is currently
+      available in the 2.2.x line for CVE-2026-53914; review when OkHttp ships with a newer Kotlin.
+    ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin-stdlib(-jdk(7|8))?@2\.2\.0$</packageUrl>
+    <cve>CVE-2026-53914</cve>
   </suppress></suppressions>
