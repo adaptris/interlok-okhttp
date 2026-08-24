@@ -143,7 +143,7 @@ dependencies {
   implementation ("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion")
   implementation ("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
   implementation ("com.squareup.okio:okio:3.11.0")
-  implementation ("com.squareup.okhttp3:okhttp:4.12.0")
+  implementation ("com.squareup.okhttp3:okhttp:5.5.0")
 
   annotationProcessor ("com.adaptris:interlok-core-apt:$interlokCoreVersion") {changing= true}
   umlDoclet("nl.talsmasoftware:umldoclet:2.1.0")
